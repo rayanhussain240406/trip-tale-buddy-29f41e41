@@ -1814,3 +1814,11 @@ a {
     scroll-behavior: auto !important;
   }
 }
+/* Full-screen stories must neutralize the shared dialog's centering utilities. */
+.story-dialog {
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  translate: none;
+}
