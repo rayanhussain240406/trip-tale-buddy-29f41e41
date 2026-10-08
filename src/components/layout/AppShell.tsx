@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Compass, Menu, Plus, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTravex } from "@/context/TravexContext";
@@ -68,17 +68,13 @@ export function AppShell({ children }: { children: ReactNode }) {
           </Button>
         </div>
       </header>
-      <AnimatePresence mode="wait">
         <motion.div
-          key={path}
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0 }}
           transition={{ duration: 0.22 }}
         >
           {children}
         </motion.div>
-      </AnimatePresence>
       <footer className="site-footer">
         <span>
           <Compass size={15} />
