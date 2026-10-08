@@ -1,6 +1,6 @@
 # Travex frontend
-- [ ] Build authentication preview and shared navigation
-- [ ] Build Home, memories, Ghoomi companion, group trips and chat, My Space
-- [ ] Build stories, photo uploads, trip creation and invitations
-- [ ] Add external-service adapters without duplicating the backend
-- [ ] Verify desktop/mobile and the complete preview flow
+- [x] Build authentication preview and shared navigation
+- [x] Build Home, memories, Ghoomi companion, group trips and chat, My Space
+- [x] Build stories, photo uploads, trip creation and invitations
+- [x] Add external-service adapters without duplicating the backend
+- [x] Verify desktop/mobile and the complete preview flow

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Compass, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { supabaseAuth } from "@/services/supabaseAuth";
 import coast from "@/assets/goa-coast.jpg";
 export function AuthModal() {
   const { login } = useTravex();
+  const navigate = useNavigate();
   const [mode, setMode] = useState("login");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,6 +19,7 @@ export function AuthModal() {
     setError("");
     try {
       await login(name);
+      await navigate({ to: "/" });
     } catch {
       setError("We couldn’t open your preview. Please try again.");
     } finally {
