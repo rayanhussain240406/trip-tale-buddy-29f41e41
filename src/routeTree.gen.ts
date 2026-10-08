@@ -10,33 +10,120 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GroupsRouteImport } from './routes/groups'
+import { Route as MemoriesRouteImport } from './routes/memories'
+import { Route as MySpaceRouteImport } from './routes/my-space'
+import { Route as GroupsIndexRouteImport } from './routes/groups.index'
+import { Route as GroupsGroupIdRouteImport } from './routes/groups.$groupId'
+import { Route as MemoriesIndexRouteImport } from './routes/memories.index'
+import { Route as MemoriesTripIdRouteImport } from './routes/memories.$tripId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GroupsRoute = GroupsRouteImport.update({
+  id: '/groups',
+  path: '/groups',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemoriesRoute = MemoriesRouteImport.update({
+  id: '/memories',
+  path: '/memories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MySpaceRoute = MySpaceRouteImport.update({
+  id: '/my-space',
+  path: '/my-space',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GroupsIndexRoute = GroupsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => GroupsRoute,
+} as any)
+const GroupsGroupIdRoute = GroupsGroupIdRouteImport.update({
+  id: '/$groupId',
+  path: '/$groupId',
+  getParentRoute: () => GroupsRoute,
+} as any)
+const MemoriesIndexRoute = MemoriesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MemoriesRoute,
+} as any)
+const MemoriesTripIdRoute = MemoriesTripIdRouteImport.update({
+  id: '/$tripId',
+  path: '/$tripId',
+  getParentRoute: () => MemoriesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/groups': typeof GroupsRouteWithChildren
+  '/memories': typeof MemoriesRouteWithChildren
+  '/my-space': typeof MySpaceRoute
+  '/groups/$groupId': typeof GroupsGroupIdRoute
+  '/memories/$tripId': typeof MemoriesTripIdRoute
+  '/groups/': typeof GroupsIndexRoute
+  '/memories/': typeof MemoriesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/my-space': typeof MySpaceRoute
+  '/groups/$groupId': typeof GroupsGroupIdRoute
+  '/memories/$tripId': typeof MemoriesTripIdRoute
+  '/groups': typeof GroupsIndexRoute
+  '/memories': typeof MemoriesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/groups': typeof GroupsRouteWithChildren
+  '/memories': typeof MemoriesRouteWithChildren
+  '/my-space': typeof MySpaceRoute
+  '/groups/$groupId': typeof GroupsGroupIdRoute
+  '/memories/$tripId': typeof MemoriesTripIdRoute
+  '/groups/': typeof GroupsIndexRoute
+  '/memories/': typeof MemoriesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/groups'
+    | '/memories'
+    | '/my-space'
+    | '/groups/$groupId'
+    | '/memories/$tripId'
+    | '/groups/'
+    | '/memories/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/my-space'
+    | '/groups/$groupId'
+    | '/memories/$tripId'
+    | '/groups'
+    | '/memories'
+  id:
+    | '__root__'
+    | '/'
+    | '/groups'
+    | '/memories'
+    | '/my-space'
+    | '/groups/$groupId'
+    | '/memories/$tripId'
+    | '/groups/'
+    | '/memories/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GroupsRoute: typeof GroupsRouteWithChildren
+  MemoriesRoute: typeof MemoriesRouteWithChildren
+  MySpaceRoute: typeof MySpaceRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +135,90 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/groups': {
+      id: '/groups'
+      path: '/groups'
+      fullPath: '/groups'
+      preLoaderRoute: typeof GroupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/memories': {
+      id: '/memories'
+      path: '/memories'
+      fullPath: '/memories'
+      preLoaderRoute: typeof MemoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-space': {
+      id: '/my-space'
+      path: '/my-space'
+      fullPath: '/my-space'
+      preLoaderRoute: typeof MySpaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/groups/': {
+      id: '/groups/'
+      path: '/'
+      fullPath: '/groups/'
+      preLoaderRoute: typeof GroupsIndexRouteImport
+      parentRoute: typeof GroupsRoute
+    }
+    '/groups/$groupId': {
+      id: '/groups/$groupId'
+      path: '/$groupId'
+      fullPath: '/groups/$groupId'
+      preLoaderRoute: typeof GroupsGroupIdRouteImport
+      parentRoute: typeof GroupsRoute
+    }
+    '/memories/': {
+      id: '/memories/'
+      path: '/'
+      fullPath: '/memories/'
+      preLoaderRoute: typeof MemoriesIndexRouteImport
+      parentRoute: typeof MemoriesRoute
+    }
+    '/memories/$tripId': {
+      id: '/memories/$tripId'
+      path: '/$tripId'
+      fullPath: '/memories/$tripId'
+      preLoaderRoute: typeof MemoriesTripIdRouteImport
+      parentRoute: typeof MemoriesRoute
+    }
   }
 }
 
+interface GroupsRouteChildren {
+  GroupsGroupIdRoute: typeof GroupsGroupIdRoute
+  GroupsIndexRoute: typeof GroupsIndexRoute
+}
+
+const GroupsRouteChildren: GroupsRouteChildren = {
+  GroupsGroupIdRoute: GroupsGroupIdRoute,
+  GroupsIndexRoute: GroupsIndexRoute,
+}
+
+const GroupsRouteWithChildren =
+  GroupsRoute._addFileChildren(GroupsRouteChildren)
+
+interface MemoriesRouteChildren {
+  MemoriesTripIdRoute: typeof MemoriesTripIdRoute
+  MemoriesIndexRoute: typeof MemoriesIndexRoute
+}
+
+const MemoriesRouteChildren: MemoriesRouteChildren = {
+  MemoriesTripIdRoute: MemoriesTripIdRoute,
+  MemoriesIndexRoute: MemoriesIndexRoute,
+}
+
+const MemoriesRouteWithChildren = MemoriesRoute._addFileChildren(
+  MemoriesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GroupsRoute: GroupsRouteWithChildren,
+  MemoriesRoute: MemoriesRouteWithChildren,
+  MySpaceRoute: MySpaceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
