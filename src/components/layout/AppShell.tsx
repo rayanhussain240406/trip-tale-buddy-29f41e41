@@ -68,13 +68,13 @@ export function AppShell({ children }: { children: ReactNode }) {
           </Button>
         </div>
       </header>
-        <motion.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.22 }}
-        >
-          {children}
-        </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22 }}
+      >
+        {children}
+      </motion.div>
       <footer className="site-footer">
         <span>
           <Compass size={15} />
