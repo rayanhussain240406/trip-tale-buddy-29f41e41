@@ -4,3 +4,6 @@
 - [x] Build stories, photo uploads, trip creation and invitations
 - [x] Add external-service adapters without duplicating the backend
 - [x] Verify desktop/mobile and the complete preview flow
+- [ ] Configure the existing production n8n webhook and harden request/response handling
+- [ ] Prevent duplicate submissions and preserve context during retry
+- [ ] Test an actual browser response and report any n8n/CORS blocker
