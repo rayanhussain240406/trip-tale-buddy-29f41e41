@@ -19,8 +19,12 @@ export async function sendMessageToGhoomi(request: GhoomiRequest): Promise<Ghoom
       signal: AbortSignal.timeout(30000),
     });
   } catch (error) {
-    if (error && typeof error === "object" && "name" in error &&
-      (error.name === "TimeoutError" || error.name === "AbortError")) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "name" in error &&
+      (error.name === "TimeoutError" || error.name === "AbortError")
+    ) {
       throw new Error(
         "Ghoomi took too long to reply. The workflow may still be running; wait before retrying.",
       );
