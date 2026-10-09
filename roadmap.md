@@ -1,6 +1,6 @@
 # Travex existing-project upgrade
-- [ ] Introduce Ghoomi on Home without chat; consolidate creation actions
-- [ ] Gate Ghoomi calls behind explicit requests and prevent duplicate submissions
+- [x] Introduce Ghoomi on Home without chat; consolidate creation actions
+- [x] Gate Ghoomi calls behind explicit requests and prevent duplicate submissions
 - [ ] Connect existing authentication and inspect existing schema — blocked: existing project not connected
 - [ ] Implement secure group creation, invitations, membership and persistent/realtime chat — blocked: existing authentication/schema unavailable
 - [ ] Verify live Ghoomi V2.4 calls — blocked: production endpoint and authenticated integration unavailable

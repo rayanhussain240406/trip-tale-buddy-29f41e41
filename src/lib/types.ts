@@ -20,6 +20,7 @@ export interface Photo {
   tripId: string;
   url: string;
   caption: string;
+  title?: string;
 }
 export interface ChatEntry {
   id: string;
