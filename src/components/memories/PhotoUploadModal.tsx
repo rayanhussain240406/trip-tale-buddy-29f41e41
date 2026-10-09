@@ -3,8 +3,6 @@ import { Upload, ImagePlus, LoaderCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useTravex } from "@/context/TravexContext";
-import { Input } from "@/components/ui/input";
-import type { Photo } from "@/lib/types";
 export function PhotoUploadModal({
   tripId,
   open,
@@ -17,8 +15,6 @@ export function PhotoUploadModal({
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
-  const [title, setTitle] = useState("");
-  const [caption, setCaption] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
   const { addPhotos } = useTravex();
   const choose = (chosen: File[]) => {
@@ -27,36 +23,30 @@ export function PhotoUploadModal({
     setError(valid.length !== chosen.length ? "Please choose image files only." : "");
   };
   const upload = async () => {
-    if (uploading || !files.length) return;
-    if (!title.trim()) {
-      setError("Enter a place or memory title.");
-      return;
-    }
     setUploading(true);
     try {
       const photos = await Promise.all(
         files.map(
           (file) =>
-            new Promise<Photo>((resolve, reject) => {
-              const reader = new FileReader();
-              reader.onload = () =>
-                resolve({
-                  id: crypto.randomUUID(),
-                  tripId,
-                  url: String(reader.result),
-                  title: title.trim(),
-                  caption: caption.trim(),
-                });
-              reader.onerror = reject;
-              reader.readAsDataURL(file);
-            }),
+            new Promise<{ id: string; tripId: string; url: string; caption: string }>(
+              (resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () =>
+                  resolve({
+                    id: crypto.randomUUID(),
+                    tripId,
+                    url: String(reader.result),
+                    caption: file.name,
+                  });
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+              },
+            ),
         ),
       );
       await new Promise((resolve) => setTimeout(resolve, 650));
       addPhotos(photos);
       setFiles([]);
-      setTitle("");
-      setCaption("");
       onOpenChange(false);
     } catch {
       setError("We couldn’t add these photos. Please try again.");
@@ -68,26 +58,7 @@ export function PhotoUploadModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogTitle>More moments to keep.</DialogTitle>
-        <DialogDescription>
-          Add photos to this trip’s preview. Shared storage is not connected.
-        </DialogDescription>
-        <label className="field-label">
-          Place / memory title
-          <Input
-            required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Sunset at Palolem"
-          />
-        </label>
-        <label className="field-label">
-          Caption or short story (optional)
-          <Input
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-            placeholder="A little story behind the moment"
-          />
-        </label>
+        <DialogDescription>Add your photos to the shared trip memories.</DialogDescription>
         <div
           className="upload-dropzone"
           onDragOver={(e) => e.preventDefault()}

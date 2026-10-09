@@ -1,15 +1,11 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, ChevronLeft, ChevronRight, Plus, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTravex } from "@/context/TravexContext";
 import { MemoryCard } from "./MemoryCard";
-import { PhotoUploadModal } from "@/components/memories/PhotoUploadModal";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 export function MemoriesCarousel({ all = false }: { all?: boolean }) {
-  const { trips } = useTravex();
-  const [choose, setChoose] = useState(false);
-  const [uploadTrip, setUploadTrip] = useState("");
+  const { trips, setCreateOpen } = useTravex();
   const scroll = useRef<HTMLDivElement>(null);
   return (
     <section className="memories-section">
@@ -54,42 +50,15 @@ export function MemoriesCarousel({ all = false }: { all?: boolean }) {
         {trips.map((trip) => (
           <MemoryCard key={trip.id} trip={trip} />
         ))}
-        <Button variant="ghost" className="add-memory" onClick={() => setChoose(true)}>
+        <Button variant="ghost" className="add-memory" onClick={() => setCreateOpen(true)}>
           <span className="add-icon">
             <Plus size={27} />
           </span>
-          <strong>Add Memories</strong>
-          <span>A moment worth keeping.</span>
+          <strong>Add a trip</strong>
+          <span>There’s more out there.</span>
           <MapPin size={18} />
         </Button>
       </div>
-      <Dialog open={choose} onOpenChange={setChoose}>
-        <DialogContent>
-          <DialogTitle>Choose a trip</DialogTitle>
-          <DialogDescription>Keep your memories with the right travel crew.</DialogDescription>
-          {trips.map((trip) => (
-            <Button
-              key={trip.id}
-              variant="outline"
-              onClick={() => {
-                setChoose(false);
-                setUploadTrip(trip.id);
-              }}
-            >
-              {trip.destination}
-            </Button>
-          ))}
-        </DialogContent>
-      </Dialog>
-      {uploadTrip && (
-        <PhotoUploadModal
-          tripId={uploadTrip}
-          open={Boolean(uploadTrip)}
-          onOpenChange={(open) => {
-            if (!open) setUploadTrip("");
-          }}
-        />
-      )}
     </section>
   );
 }

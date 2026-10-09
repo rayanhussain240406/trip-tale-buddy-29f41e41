@@ -6,7 +6,6 @@ import { useTravex } from "@/context/TravexContext";
 import { StoryViewerModal } from "./StoryViewerModal";
 import { PhotoUploadModal } from "./PhotoUploadModal";
 import { PhotoGallery } from "./PhotoGallery";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 export function HighlightsView({ tripId }: { tripId: string }) {
   const { trips, photos } = useTravex();
   const trip = trips.find((item) => item.id === tripId);
@@ -14,7 +13,6 @@ export function HighlightsView({ tripId }: { tripId: string }) {
   const [story, setStory] = useState(false);
   const [upload, setUpload] = useState(false);
   const [start, setStart] = useState(0);
-  const [selected, setSelected] = useState<number | null>(null);
   if (!trip)
     return (
       <main className="page-container py-20">
@@ -50,7 +48,7 @@ export function HighlightsView({ tripId }: { tripId: string }) {
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setUpload(true)}>
             <Plus />
-            Add Memories
+            Add photos
           </Button>
           <Button variant={view ? "default" : "outline"} onClick={() => setView(!view)}>
             <Eye />
@@ -100,7 +98,8 @@ export function HighlightsView({ tripId }: { tripId: string }) {
             <PhotoGallery
               photos={tripPhotos}
               onSelect={(index) => {
-                setSelected(index);
+                setStart(index);
+                setStory(true);
               }}
             />
           ) : (
@@ -111,30 +110,6 @@ export function HighlightsView({ tripId }: { tripId: string }) {
         </>
       )}
       <PhotoUploadModal tripId={tripId} open={upload} onOpenChange={setUpload} />
-      <Dialog
-        open={selected !== null}
-        onOpenChange={(open) => {
-          if (!open) setSelected(null);
-        }}
-      >
-        <DialogContent>
-          {selected !== null && tripPhotos[selected] && (
-            <>
-              <DialogTitle>
-                {tripPhotos[selected]?.title || tripPhotos[selected]?.caption || "Travel memory"}
-              </DialogTitle>
-              <DialogDescription>
-                {tripPhotos[selected]?.caption || "A moment from your trip."}
-              </DialogDescription>
-              <img
-                src={tripPhotos[selected]?.url}
-                alt={tripPhotos[selected]?.title || "Travel memory"}
-                className="w-full max-h-96 object-contain rounded-md"
-              />
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
       <StoryViewerModal
         destination={trip.destination}
         photos={tripPhotos}

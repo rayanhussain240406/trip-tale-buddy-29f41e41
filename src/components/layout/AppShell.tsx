@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Compass, Menu, ArrowUpRight } from "lucide-react";
+import { Compass, Menu, Plus, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTravex } from "@/context/TravexContext";
 import { AuthModal } from "@/components/auth/AuthModal";
@@ -10,7 +10,7 @@ import { CreateTripModal } from "./CreateTripModal";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import type { ReactNode } from "react";
 export function AppShell({ children }: { children: ReactNode }) {
-  const { user, ready } = useTravex();
+  const { user, ready, setCreateOpen } = useTravex();
   const [drawer, setDrawer] = useState(false);
   const path = useRouterState({ select: (state) => state.location.pathname });
   if (!ready)
@@ -53,6 +53,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           ))}
         </nav>
         <div className="header-right">
+          <Button className="new-trip-button" variant="outline" onClick={() => setCreateOpen(true)}>
+            <Plus />
+            New trip
+          </Button>
           <Button
             variant="ghost"
             className="profile-button"
