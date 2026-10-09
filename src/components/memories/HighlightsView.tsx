@@ -111,12 +111,29 @@ export function HighlightsView({ tripId }: { tripId: string }) {
         </>
       )}
       <PhotoUploadModal tripId={tripId} open={upload} onOpenChange={setUpload} />
-      <Dialog open={selected !== null} onOpenChange={(open) => { if (!open) setSelected(null); }}>
-        <DialogContent>{selected !== null && tripPhotos[selected] && <>
-          <DialogTitle>{tripPhotos[selected]?.title || tripPhotos[selected]?.caption || "Travel memory"}</DialogTitle>
-          <DialogDescription>{tripPhotos[selected]?.caption || "A moment from your trip."}</DialogDescription>
-          <img src={tripPhotos[selected]?.url} alt={tripPhotos[selected]?.title || "Travel memory"} className="w-full max-h-96 object-contain rounded-md" />
-        </>}</DialogContent>
+      <Dialog
+        open={selected !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelected(null);
+        }}
+      >
+        <DialogContent>
+          {selected !== null && tripPhotos[selected] && (
+            <>
+              <DialogTitle>
+                {tripPhotos[selected]?.title || tripPhotos[selected]?.caption || "Travel memory"}
+              </DialogTitle>
+              <DialogDescription>
+                {tripPhotos[selected]?.caption || "A moment from your trip."}
+              </DialogDescription>
+              <img
+                src={tripPhotos[selected]?.url}
+                alt={tripPhotos[selected]?.title || "Travel memory"}
+                className="w-full max-h-96 object-contain rounded-md"
+              />
+            </>
+          )}
+        </DialogContent>
       </Dialog>
       <StoryViewerModal
         destination={trip.destination}

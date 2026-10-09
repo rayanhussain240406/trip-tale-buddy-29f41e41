@@ -50,7 +50,9 @@ export function ChatSurface({
       return;
     }
     if (ask && user.id === "demo-explorer") {
-      setError("Connect your existing Travex account before asking Ghoomi. Preview sign-in cannot verify group membership.");
+      setError(
+        "Connect your existing Travex account before asking Ghoomi. Preview sign-in cannot verify group membership.",
+      );
       setStatus("error");
       return;
     }
@@ -134,7 +136,9 @@ export function ChatSurface({
         <PromptInput onSubmit={({ text }) => send(text)}>
           <PromptInputTextarea
             aria-label={groupId ? "Message your group" : "Message Ghoomi"}
-            placeholder={groupId ? "Message your group or mention @Ghoomi…" : "Open a group to ask Ghoomi…"}
+            placeholder={
+              groupId ? "Message your group or mention @Ghoomi…" : "Open a group to ask Ghoomi…"
+            }
             value={selectedPrompt || input}
             onChange={(e) => {
               onPromptSent?.();
@@ -144,7 +148,18 @@ export function ChatSurface({
           />
           <PromptInputFooter>
             <div className="flex gap-1">
-              {groupId && <Button type="button" variant={askGhoomi ? "default" : "outline"} size="sm" aria-pressed={askGhoomi} disabled={status === "submitted"} onClick={() => setAskGhoomi(!askGhoomi)}>Ask Ghoomi</Button>}
+              {groupId && (
+                <Button
+                  type="button"
+                  variant={askGhoomi ? "default" : "outline"}
+                  size="sm"
+                  aria-pressed={askGhoomi}
+                  disabled={status === "submitted"}
+                  onClick={() => setAskGhoomi(!askGhoomi)}
+                >
+                  Ask Ghoomi
+                </Button>
+              )}
               <Button
                 type="button"
                 variant="ghost"
@@ -196,7 +211,8 @@ export function ChatSurface({
           }}
         />
         <p className="chat-disclaimer">
-          Preview messages stay in this browser only. Shared messaging and Ghoomi require your existing account connection.
+          Preview messages stay in this browser only. Shared messaging and Ghoomi require your
+          existing account connection.
         </p>
       </div>
     </div>
@@ -206,14 +222,23 @@ export function InviteButton({ groupId }: { groupId: string }) {
   const [error, setError] = useState("");
   return (
     <div>
-    <Button
-      variant="outline"
-      onClick={() => setError("Secure invitation links require your existing account connection. No invitation was generated.")}
-      aria-label={`Invite friends to group ${groupId}`}
-    >
-      <Plus />Invite friends
-    </Button>
-    {error && <p role="alert" className="text-xs text-destructive max-w-xs mt-2">{error}</p>}
+      <Button
+        variant="outline"
+        onClick={() =>
+          setError(
+            "Secure invitation links require your existing account connection. No invitation was generated.",
+          )
+        }
+        aria-label={`Invite friends to group ${groupId}`}
+      >
+        <Plus />
+        Invite friends
+      </Button>
+      {error && (
+        <p role="alert" className="text-xs text-destructive max-w-xs mt-2">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

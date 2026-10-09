@@ -40,15 +40,19 @@ export function GroupTripChat({ groupId }: { groupId: string }) {
             {trip.date}
           </p>
         </div>
-        <Button variant="ghost" onClick={() => setMembersOpen(true)} aria-label="View group members">
-        <div className="member-stack">
-          {trip.members.map((name) => (
-            <span className="small-avatar" key={name} title={name}>
-              {name[0]}
-            </span>
-          ))}
-        </div>
-        <span>{trip.members.length} members</span>
+        <Button
+          variant="ghost"
+          onClick={() => setMembersOpen(true)}
+          aria-label="View group members"
+        >
+          <div className="member-stack">
+            {trip.members.map((name) => (
+              <span className="small-avatar" key={name} title={name}>
+                {name[0]}
+              </span>
+            ))}
+          </div>
+          <span>{trip.members.length} members</span>
         </Button>
         <InviteButton groupId={groupId} />
       </div>
@@ -61,11 +65,30 @@ export function GroupTripChat({ groupId }: { groupId: string }) {
         key={groupId}
         groupId={groupId}
         page="group-chat"
-        initial={[{ id: `${groupId}-greeting`, sender: "Ghoomi", role: "assistant", text: GHOOMI_GREETING, time: "Welcome" }]}
+        initial={[
+          {
+            id: `${groupId}-greeting`,
+            sender: "Ghoomi",
+            role: "assistant",
+            text: GHOOMI_GREETING,
+            time: "Welcome",
+          },
+        ]}
       />
       <Dialog open={membersOpen} onOpenChange={setMembersOpen}>
-        <DialogContent><DialogTitle>{trip.destination} crew</DialogTitle><DialogDescription>Sample group members. Real membership is not connected.</DialogDescription>
-          <ul className="space-y-3">{trip.members.map((name) => <li key={name} className="flex items-center gap-3"><span className="avatar">{name[0]}</span>{name}</li>)}</ul>
+        <DialogContent>
+          <DialogTitle>{trip.destination} crew</DialogTitle>
+          <DialogDescription>
+            Sample group members. Real membership is not connected.
+          </DialogDescription>
+          <ul className="space-y-3">
+            {trip.members.map((name) => (
+              <li key={name} className="flex items-center gap-3">
+                <span className="avatar">{name[0]}</span>
+                {name}
+              </li>
+            ))}
+          </ul>
         </DialogContent>
       </Dialog>
     </main>

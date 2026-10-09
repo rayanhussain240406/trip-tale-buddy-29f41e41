@@ -23,9 +23,9 @@ function Groups() {
           </h1>
           <p>A shared plan. A hundred stories waiting to happen.</p>
         </div>
-          <Button onClick={() => setCreateOpen(true)}>
+        <Button onClick={() => setCreateOpen(true)}>
           <Plus />
-            Create Trip
+          Create Trip
         </Button>
       </div>
       <div className="section-heading">

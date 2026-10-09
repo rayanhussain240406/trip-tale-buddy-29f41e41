@@ -91,7 +91,10 @@ function Index() {
         <section className="py-8 border-b border-border">
           <div className="eyebrow text-primary">YOUR TRAVEL COMPANION</div>
           <h2 className="text-3xl mt-3">Meet Ghoomi.</h2>
-          <p className="text-muted-foreground mt-3 max-w-2xl">Bring your people together. Ghoomi helps your group turn different ideas into a shared adventure.</p>
+          <p className="text-muted-foreground mt-3 max-w-2xl">
+            Bring your people together. Ghoomi helps your group turn different ideas into a shared
+            adventure.
+          </p>
           <ul className="grid sm:grid-cols-2 gap-4 mt-6 text-sm">
             <li>Group travel planning</li>
             <li>Understanding each member’s preferences</li>
@@ -101,12 +104,21 @@ function Index() {
             <li>Retrieving saved price watches</li>
             <li>Trip memories and journals</li>
           </ul>
-          <p className="text-xs text-muted-foreground mt-5">Ghoomi’s existing service is not connected to this preview. Live fares, bookings, monitoring and downloadable journals are unavailable here.</p>
+          <p className="text-xs text-muted-foreground mt-5">
+            Ghoomi’s existing service is not connected to this preview. Live fares, bookings,
+            monitoring and downloadable journals are unavailable here.
+          </p>
         </section>
         <section className="py-8 border-b border-border">
           <h2 className="text-2xl">Your groups</h2>
-          <p className="mt-3 text-sm text-muted-foreground">Connect your existing Travex account to see the groups you belong to.</p>
-          <Button asChild variant="ghost" className="mt-3"><Link to="/groups">Browse sample groups <ArrowUpRight /></Link></Button>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Connect your existing Travex account to see the groups you belong to.
+          </p>
+          <Button asChild variant="ghost" className="mt-3">
+            <Link to="/groups">
+              Browse sample groups <ArrowUpRight />
+            </Link>
+          </Button>
         </section>
         <MemoriesCarousel />
         <section className="journey-band">

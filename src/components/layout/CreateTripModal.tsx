@@ -26,10 +26,20 @@ export function CreateTripModal() {
               setError("Your end date must be on or after your start date.");
               return;
             }
-            setError("Connect your existing Travex account before creating a group. Preview sign-in cannot create secure memberships.");
+            setError(
+              "Connect your existing Travex account before creating a group. Preview sign-in cannot create secure memberships.",
+            );
           }}
         >
-          <label className="field-label">Trip / group name<Input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your travel crew" /></label>
+          <label className="field-label">
+            Trip / group name
+            <Input
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your travel crew"
+            />
+          </label>
           <label className="field-label">
             Destination
             <Input
@@ -42,23 +52,21 @@ export function CreateTripModal() {
           <div className="grid grid-cols-2 gap-4">
             <label className="field-label">
               Start date
-              <Input
-                type="date"
-                value={start}
-                onChange={(e) => setStart(e.target.value)}
-              />
+              <Input type="date" value={start} onChange={(e) => setStart(e.target.value)} />
             </label>
             <label className="field-label">
               End date
-              <Input
-                type="date"
-                min={start}
-                value={end}
-                onChange={(e) => setEnd(e.target.value)}
-              />
+              <Input type="date" min={start} value={end} onChange={(e) => setEnd(e.target.value)} />
             </label>
           </div>
-          <label className="field-label">Description (optional)<Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="A little about your trip" /></label>
+          <label className="field-label">
+            Description (optional)
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="A little about your trip"
+            />
+          </label>
           {error && (
             <p role="alert" className="text-destructive text-sm">
               {error}
@@ -68,7 +76,10 @@ export function CreateTripModal() {
             Create Trip
             <ArrowUpRight />
           </Button>
-          <p className="text-xs text-muted-foreground">Group creation requires your existing account connection. No group will be created in this preview.</p>
+          <p className="text-xs text-muted-foreground">
+            Group creation requires your existing account connection. No group will be created in
+            this preview.
+          </p>
         </form>
       </DialogContent>
     </Dialog>

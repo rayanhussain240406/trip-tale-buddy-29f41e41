@@ -28,27 +28,28 @@ export function PhotoUploadModal({
   };
   const upload = async () => {
     if (uploading || !files.length) return;
-    if (!title.trim()) { setError("Enter a place or memory title."); return; }
+    if (!title.trim()) {
+      setError("Enter a place or memory title.");
+      return;
+    }
     setUploading(true);
     try {
       const photos = await Promise.all(
         files.map(
           (file) =>
-            new Promise<Photo>(
-              (resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () =>
-                  resolve({
-                    id: crypto.randomUUID(),
-                    tripId,
-                    url: String(reader.result),
-                    title: title.trim(),
-                    caption: caption.trim(),
-                  });
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-              },
-            ),
+            new Promise<Photo>((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () =>
+                resolve({
+                  id: crypto.randomUUID(),
+                  tripId,
+                  url: String(reader.result),
+                  title: title.trim(),
+                  caption: caption.trim(),
+                });
+              reader.onerror = reject;
+              reader.readAsDataURL(file);
+            }),
         ),
       );
       await new Promise((resolve) => setTimeout(resolve, 650));
@@ -67,9 +68,26 @@ export function PhotoUploadModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogTitle>More moments to keep.</DialogTitle>
-        <DialogDescription>Add photos to this trip’s preview. Shared storage is not connected.</DialogDescription>
-        <label className="field-label">Place / memory title<Input required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Sunset at Palolem" /></label>
-        <label className="field-label">Caption or short story (optional)<Input value={caption} onChange={(e) => setCaption(e.target.value)} placeholder="A little story behind the moment" /></label>
+        <DialogDescription>
+          Add photos to this trip’s preview. Shared storage is not connected.
+        </DialogDescription>
+        <label className="field-label">
+          Place / memory title
+          <Input
+            required
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Sunset at Palolem"
+          />
+        </label>
+        <label className="field-label">
+          Caption or short story (optional)
+          <Input
+            value={caption}
+            onChange={(e) => setCaption(e.target.value)}
+            placeholder="A little story behind the moment"
+          />
+        </label>
         <div
           className="upload-dropzone"
           onDragOver={(e) => e.preventDefault()}

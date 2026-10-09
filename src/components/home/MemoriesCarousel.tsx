@@ -63,10 +63,33 @@ export function MemoriesCarousel({ all = false }: { all?: boolean }) {
           <MapPin size={18} />
         </Button>
       </div>
-      <Dialog open={choose} onOpenChange={setChoose}><DialogContent><DialogTitle>Choose a trip</DialogTitle><DialogDescription>Keep your memories with the right travel crew.</DialogDescription>
-        {trips.map((trip) => <Button key={trip.id} variant="outline" onClick={() => { setChoose(false); setUploadTrip(trip.id); }}>{trip.destination}</Button>)}
-      </DialogContent></Dialog>
-      {uploadTrip && <PhotoUploadModal tripId={uploadTrip} open={Boolean(uploadTrip)} onOpenChange={(open) => { if (!open) setUploadTrip(""); }} />}
+      <Dialog open={choose} onOpenChange={setChoose}>
+        <DialogContent>
+          <DialogTitle>Choose a trip</DialogTitle>
+          <DialogDescription>Keep your memories with the right travel crew.</DialogDescription>
+          {trips.map((trip) => (
+            <Button
+              key={trip.id}
+              variant="outline"
+              onClick={() => {
+                setChoose(false);
+                setUploadTrip(trip.id);
+              }}
+            >
+              {trip.destination}
+            </Button>
+          ))}
+        </DialogContent>
+      </Dialog>
+      {uploadTrip && (
+        <PhotoUploadModal
+          tripId={uploadTrip}
+          open={Boolean(uploadTrip)}
+          onOpenChange={(open) => {
+            if (!open) setUploadTrip("");
+          }}
+        />
+      )}
     </section>
   );
 }
