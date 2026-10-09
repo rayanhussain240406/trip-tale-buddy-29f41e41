@@ -1,18 +1,17 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
 import { MapPin, ArrowUpRight } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTravex } from "@/context/TravexContext";
-import coast from "@/assets/goa-coast.jpg";
 export function CreateTripModal() {
-  const { createOpen, setCreateOpen, addTrip, user } = useTravex();
+  const { createOpen, setCreateOpen } = useTravex();
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [destination, setDestination] = useState("");
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
   return (
     <Dialog open={createOpen} onOpenChange={setCreateOpen}>
       <DialogContent>
@@ -23,30 +22,24 @@ export function CreateTripModal() {
           className="space-y-5"
           onSubmit={(e) => {
             e.preventDefault();
-            if (end < start) {
+            if (end && start && end < start) {
               setError("Your end date must be on or after your start date.");
               return;
             }
-            const id = crypto.randomUUID();
-            addTrip({
-              id,
-              destination: destination.trim(),
-              start,
-              end,
-              date: `${start} – ${end}`,
-              subtitle: "The best stories are still to come.",
-              cover: coast,
-              photoCount: 0,
-              members: [user?.name || "Explorer"],
-            });
-            setCreateOpen(false);
-            setDestination("");
-            setStart("");
-            setEnd("");
-            setError("");
-            navigate({ to: "/groups/$groupId", params: { groupId: id } });
+            setError(
+              "Connect your existing Travex account before creating a group. Preview sign-in cannot create secure memberships.",
+            );
           }}
         >
+          <label className="field-label">
+            Trip / group name
+            <Input
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your travel crew"
+            />
+          </label>
           <label className="field-label">
             Destination
             <Input
@@ -59,34 +52,34 @@ export function CreateTripModal() {
           <div className="grid grid-cols-2 gap-4">
             <label className="field-label">
               Start date
-              <Input
-                required
-                type="date"
-                value={start}
-                onChange={(e) => setStart(e.target.value)}
-              />
+              <Input type="date" value={start} onChange={(e) => setStart(e.target.value)} />
             </label>
             <label className="field-label">
               End date
-              <Input
-                required
-                type="date"
-                min={start}
-                value={end}
-                onChange={(e) => setEnd(e.target.value)}
-              />
+              <Input type="date" min={start} value={end} onChange={(e) => setEnd(e.target.value)} />
             </label>
           </div>
+          <label className="field-label">
+            Description (optional)
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="A little about your trip"
+            />
+          </label>
           {error && (
             <p role="alert" className="text-destructive text-sm">
               {error}
             </p>
           )}
           <Button type="submit" className="w-full h-11">
-            Create trip
+            Create Trip
             <ArrowUpRight />
           </Button>
-          <p className="text-xs text-muted-foreground">Preview trips stay here until you reload.</p>
+          <p className="text-xs text-muted-foreground">
+            Group creation requires your existing account connection. No group will be created in
+            this preview.
+          </p>
         </form>
       </DialogContent>
     </Dialog>

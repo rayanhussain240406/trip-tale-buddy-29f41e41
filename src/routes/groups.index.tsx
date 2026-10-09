@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Plus, ArrowUpRight, CalendarDays, Users } from "lucide-react";
+import { Plus, ArrowUpRight, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTravex } from "@/context/TravexContext";
 import { pageHead } from "@/lib/metadata";
@@ -25,11 +25,11 @@ function Groups() {
         </div>
         <Button onClick={() => setCreateOpen(true)}>
           <Plus />
-          Create trip
+          Create Trip
         </Button>
       </div>
       <div className="section-heading">
-        <h2>Your trip groups</h2>
+        <h2>Sample trip groups</h2>
         <span className="preview-label">{trips.length} ADVENTURES</span>
       </div>
       <div className="group-grid">
@@ -66,15 +66,6 @@ function Groups() {
             </div>
           </article>
         ))}
-        <Button className="create-group-card" variant="ghost" onClick={() => setCreateOpen(true)}>
-          <Users size={32} />
-          <h2>A new adventure?</h2>
-          <p>There’s always room for one more.</p>
-          <span className="flex items-center gap-2 text-primary mt-4">
-            <Plus size={16} />
-            Create a trip
-          </span>
-        </Button>
       </div>
     </main>
   );

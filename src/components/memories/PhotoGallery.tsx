@@ -16,10 +16,10 @@ export function PhotoGallery({
           className="gallery-photo h-auto p-0"
           key={photo.id}
           onClick={() => onSelect(index)}
-          aria-label={`View ${photo.caption}`}
+          aria-label={`View ${photo.title || photo.caption}`}
         >
-          <img src={photo.url} alt={photo.caption} loading="lazy" />
-          <span>{photo.caption}</span>
+          <img src={photo.url} alt={photo.title || photo.caption} loading="lazy" />
+          <span>{photo.title || photo.caption}</span>
         </Button>
       ))}
     </div>

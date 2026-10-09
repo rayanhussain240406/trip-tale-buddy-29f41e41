@@ -15,3 +15,5 @@
 - Mock sessions may persist locally, but trip and photo mutations stay in preview memory; production persistence belongs to the existing backend, not a new one.
 - Compose chat surfaces with installed AI Elements primitives; this keeps message rendering and input behavior consistent without adding an intelligence layer.
 - Use browser-safe VITE-prefixed public configuration on this Vite project; never expose private credentials, and leave authenticated webhooks disconnected until a secure intermediary exists.
+- Block production group creation, invite issuance/acceptance and agent requests from preview identities until existing authentication and membership checks are available; local sample state must never impersonate shared access.
+- Keep explicit agent invocation rules in a tested browser-safe helper; ordinary group messages must not trigger the external workflow.

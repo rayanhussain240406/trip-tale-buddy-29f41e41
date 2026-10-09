@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Mic, Plus, Send, Copy, Check, RotateCcw } from "lucide-react";
+import { Mic, Plus, Send } from "lucide-react";
 import {
   Conversation,
   ConversationContent,
@@ -18,6 +18,7 @@ import { sendMessageToGhoomi } from "@/services/ghoomiService";
 import { useTravex } from "@/context/TravexContext";
 import { ChatMessage } from "./ChatMessage";
 import type { ChatEntry } from "@/lib/types";
+import { shouldAskGhoomi } from "@/lib/group-chat";
 export function ChatSurface({
   groupId = null,
   page,
@@ -38,10 +39,24 @@ export function ChatSurface({
   const [input, setInput] = useState("");
   const [attachment, setAttachment] = useState<string>();
   const fileInput = useRef<HTMLInputElement>(null);
-  const [last, setLast] = useState("");
+  const sending = useRef(false);
+  const [askGhoomi, setAskGhoomi] = useState(false);
   const send = async (text: string) => {
-    if (!user || (!text.trim() && !attachment)) return;
-    setLast(text);
+    if (sending.current || !user || (!text.trim() && !attachment)) return;
+    const ask = shouldAskGhoomi(text, askGhoomi);
+    if (ask && !groupId) {
+      setError("Open a group conversation to ask Ghoomi about that trip.");
+      setStatus("error");
+      return;
+    }
+    if (ask && user.id === "demo-explorer") {
+      setError(
+        "Connect your existing Travex account before asking Ghoomi. Preview sign-in cannot verify group membership.",
+      );
+      setStatus("error");
+      return;
+    }
+    sending.current = true;
     setError("");
     setStatus("submitted");
     setMessages((prev) => [
@@ -59,6 +74,11 @@ export function ChatSurface({
     onPromptSent?.();
     const media = attachment;
     setAttachment(undefined);
+    if (!ask) {
+      setStatus("ready");
+      sending.current = false;
+      return;
+    }
     try {
       const result = await sendMessageToGhoomi({
         user_id: user.id,
@@ -80,6 +100,8 @@ export function ChatSurface({
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Try again.");
       setStatus("error");
+    } finally {
+      sending.current = false;
     }
   };
   return (
@@ -93,10 +115,6 @@ export function ChatSurface({
           {error && (
             <div role="alert" className="text-destructive text-sm">
               {error}
-              <Button variant="ghost" size="sm" onClick={() => send(last)}>
-                <RotateCcw />
-                Retry
-              </Button>
             </div>
           )}
         </ConversationContent>
@@ -117,8 +135,10 @@ export function ChatSurface({
         )}
         <PromptInput onSubmit={({ text }) => send(text)}>
           <PromptInputTextarea
-            aria-label="Message Ghoomi"
-            placeholder="Plan your trip or ask Ghoomi…"
+            aria-label={groupId ? "Message your group" : "Message Ghoomi"}
+            placeholder={
+              groupId ? "Message your group or mention @Ghoomi…" : "Open a group to ask Ghoomi…"
+            }
             value={selectedPrompt || input}
             onChange={(e) => {
               onPromptSent?.();
@@ -128,6 +148,18 @@ export function ChatSurface({
           />
           <PromptInputFooter>
             <div className="flex gap-1">
+              {groupId && (
+                <Button
+                  type="button"
+                  variant={askGhoomi ? "default" : "outline"}
+                  size="sm"
+                  aria-pressed={askGhoomi}
+                  disabled={status === "submitted"}
+                  onClick={() => setAskGhoomi(!askGhoomi)}
+                >
+                  Ask Ghoomi
+                </Button>
+              )}
               <Button
                 type="button"
                 variant="ghost"
@@ -179,31 +211,34 @@ export function ChatSurface({
           }}
         />
         <p className="chat-disclaimer">
-          {import.meta.env["VITE_GHOOMI_WEBHOOK_URL"]
-            ? "Connected to your Ghoomi workflow"
-            : "Preview conversation · Ghoomi is not connected yet"}
+          Preview messages stay in this browser only. Shared messaging and Ghoomi require your
+          existing account connection.
         </p>
       </div>
     </div>
   );
 }
 export function InviteButton({ groupId }: { groupId: string }) {
-  const [copied, setCopied] = useState(false);
+  const [error, setError] = useState("");
   return (
-    <Button
-      variant="outline"
-      onClick={async () => {
-        try {
-          await navigator.clipboard.writeText(`${window.location.origin}/groups/${groupId}`);
-          setCopied(true);
-          setTimeout(() => setCopied(false), 2500);
-        } catch {
-          setCopied(false);
+    <div>
+      <Button
+        variant="outline"
+        onClick={() =>
+          setError(
+            "Secure invitation links require your existing account connection. No invitation was generated.",
+          )
         }
-      }}
-    >
-      {copied ? <Check /> : <Copy />}
-      {copied ? "Link copied" : "Invite friends"}
-    </Button>
+        aria-label={`Invite friends to group ${groupId}`}
+      >
+        <Plus />
+        Invite friends
+      </Button>
+      {error && (
+        <p role="alert" className="text-xs text-destructive max-w-xs mt-2">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
