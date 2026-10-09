@@ -52,11 +52,11 @@ export async function sendMessageToGhoomi(request: GhoomiRequest): Promise<Ghoom
     throw new Error("Ghoomi returned an unreadable reply. Please try again.");
   }
   const fields = item as Record<string, unknown>;
-  const message = [fields.message, fields.output, fields.response].find(
+  const message = [fields["message"], fields["output"], fields["response"]].find(
     (value): value is string => typeof value === "string" && value.trim().length > 0,
   );
   if (!message) throw new Error("Ghoomi returned an empty or unreadable reply. Please try again.");
-  const reaction = fields.reaction;
+  const reaction = fields["reaction"];
   return {
     message,
     ...(reaction === "happy" ||
