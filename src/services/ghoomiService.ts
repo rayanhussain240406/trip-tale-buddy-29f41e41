@@ -17,7 +17,7 @@ export async function sendMessageToGhoomi(request: GhoomiRequest): Promise<Ghoom
       ...request,
       chatInput: request.message,
     }),
-    signal: AbortSignal.timeout(30000),
+    signal: AbortSignal.timeout(90000),
   });
 
   if (!response.ok) {

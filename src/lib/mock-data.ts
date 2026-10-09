@@ -1,8 +1,10 @@
-import goa from "@/assets/goa.asset.json";
-import varkala from "@/assets/varkala.asset.json";
-import delhi from "@/assets/delhi.asset.json";
+import delhiImage from "@/assets/delhi.jpg";
 import coast from "@/assets/goa-coast.jpg";
+import varkalaImage from "@/assets/varkala.jpg";
+
+const goaImage = coast;
 import type { Trip, Photo, ChatEntry, Profile } from "./types";
+
 export const demoProfile: Profile = {
   id: "demo-explorer",
   name: "Sahana",
@@ -16,7 +18,7 @@ export const mockTrips: Trip[] = [
     date: "MAR 12 – 16, 2026",
     start: "2026-03-12",
     end: "2026-03-16",
-    cover: goa.url,
+    cover: coast,
     photoCount: 124,
     members: ["Sahana", "Ryan", "Zayan", "Ananya"],
   },
@@ -27,7 +29,7 @@ export const mockTrips: Trip[] = [
     date: "JAN 24 – 28, 2026",
     start: "2026-01-24",
     end: "2026-01-28",
-    cover: varkala.url,
+    cover: varkalaImage,
     photoCount: 86,
     members: ["Sahana", "Ananya", "Ryan"],
   },
@@ -38,13 +40,13 @@ export const mockTrips: Trip[] = [
     date: "DEC 08 – 11, 2025",
     start: "2025-12-08",
     end: "2025-12-11",
-    cover: delhi.url,
+    cover: delhiImage,
     photoCount: 62,
     members: ["Sahana", "Zayan"],
   },
 ];
 export const mockPhotos: Photo[] = mockTrips.flatMap((trip) =>
-  [trip.cover, coast, varkala.url, goa.url, delhi.url, coast].map((url, i) => ({
+  [trip.cover, coast, varkalaImage, goaImage, delhiImage, coast].map((url, i) => ({
     id: `${trip.id}-${i}`,
     tripId: trip.id,
     url,
@@ -102,7 +104,7 @@ export const studioPrompts = [
   "What were our best moments?",
 ];
 export const studioResults = [
-  { title: "Postcards from Goa", format: "PINTEREST · 2:3", image: goa.url },
-  { title: "Ocean state of mind", format: "STORY · 9:16", image: varkala.url },
-  { title: "Little things, big memories", format: "POLAROID · 4:5", image: delhi.url },
+  { title: "Postcards from Goa", format: "PINTEREST · 2:3", image: goaImage },
+  { title: "Ocean state of mind", format: "STORY · 9:16", image: varkalaImage },
+  { title: "Little things, big memories", format: "POLAROID · 4:5", image: delhiImage },
 ];
