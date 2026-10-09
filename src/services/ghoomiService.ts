@@ -20,9 +20,13 @@ export async function sendMessageToGhoomi(request: GhoomiRequest): Promise<Ghoom
     });
   } catch (error) {
     if (error instanceof Error && ["TimeoutError", "AbortError"].includes(error.name)) {
-      throw new Error("Ghoomi took too long to reply. The workflow may still be running; wait before retrying.");
+      throw new Error(
+        "Ghoomi took too long to reply. The workflow may still be running; wait before retrying.",
+      );
     }
-    throw new Error("Couldn’t reach Ghoomi. Check your connection or the webhook’s browser access settings.");
+    throw new Error(
+      "Couldn’t reach Ghoomi. Check your connection or the webhook’s browser access settings.",
+    );
   }
 
   if (!response.ok) {
@@ -33,7 +37,9 @@ export async function sendMessageToGhoomi(request: GhoomiRequest): Promise<Ghoom
   try {
     result = await response.json();
   } catch {
-    throw new Error("Ghoomi returned an unreadable reply. The workflow must return JSON with message, output, or response.");
+    throw new Error(
+      "Ghoomi returned an unreadable reply. The workflow must return JSON with message, output, or response.",
+    );
   }
   // n8n can return a single item directly or wrap it in an items array.
   const item: unknown = Array.isArray(result) && result.length === 1 ? result[0] : result;
@@ -48,7 +54,12 @@ export async function sendMessageToGhoomi(request: GhoomiRequest): Promise<Ghoom
   const reaction = fields.reaction;
   return {
     message,
-    ...(reaction === "happy" || reaction === "curious" || reaction === "thinking" ||
-    reaction === "excited" || reaction === "neutral" ? { reaction } : {}),
+    ...(reaction === "happy" ||
+    reaction === "curious" ||
+    reaction === "thinking" ||
+    reaction === "excited" ||
+    reaction === "neutral"
+      ? { reaction }
+      : {}),
   };
 }

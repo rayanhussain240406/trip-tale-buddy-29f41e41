@@ -42,12 +42,14 @@ export function ChatSurface({
   const lastRequest = useRef<GhoomiRequest | null>(null);
   const send = async (text: string, retry = false) => {
     if (!user || pending.current || (!retry && !text.trim() && !attachment)) return;
-    const request = retry ? lastRequest.current : {
-      user_id: user.id,
-      group_id: groupId,
-      message: text,
-      context: { page, ...(attachment ? { attachments: [attachment] } : {}) },
-    };
+    const request = retry
+      ? lastRequest.current
+      : {
+          user_id: user.id,
+          group_id: groupId,
+          message: text,
+          context: { page, ...(attachment ? { attachments: [attachment] } : {}) },
+        };
     if (!request || request.user_id !== user.id || request.group_id !== groupId) return;
     pending.current = true;
     lastRequest.current = request;
@@ -55,19 +57,19 @@ export function ChatSurface({
     setStatus("submitted");
     if (!retry) {
       setMessages((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        sender: user.name,
-        role: "user",
-        text: text || "Shared a photo",
-        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        ...(attachment ? { attachment } : {}),
-      },
-    ]);
-    setInput("");
-    onPromptSent?.();
-    setAttachment(undefined);
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          sender: user.name,
+          role: "user",
+          text: text || "Shared a photo",
+          time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          ...(attachment ? { attachment } : {}),
+        },
+      ]);
+      setInput("");
+      onPromptSent?.();
+      setAttachment(undefined);
     }
     try {
       const result = await sendMessageToGhoomi(request);
@@ -100,7 +102,12 @@ export function ChatSurface({
           {error && (
             <div role="alert" className="text-destructive text-sm">
               {error}
-              <Button variant="ghost" size="sm" disabled={status === "submitted"} onClick={() => send("", true)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                disabled={status === "submitted"}
+                onClick={() => send("", true)}
+              >
                 <RotateCcw />
                 Retry
               </Button>
