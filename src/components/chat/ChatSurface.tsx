@@ -17,7 +17,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { sendMessageToGhoomi } from "@/services/ghoomiService";
 import { useTravex } from "@/context/TravexContext";
 import { ChatMessage } from "./ChatMessage";
-import type { ChatEntry } from "@/lib/types";
+import type { ChatEntry, GhoomiRequest } from "@/lib/types";
 export function ChatSurface({
   groupId = null,
   page,
@@ -38,34 +38,41 @@ export function ChatSurface({
   const [input, setInput] = useState("");
   const [attachment, setAttachment] = useState<string>();
   const fileInput = useRef<HTMLInputElement>(null);
-  const [last, setLast] = useState("");
-  const send = async (text: string) => {
-    if (!user || (!text.trim() && !attachment)) return;
-    setLast(text);
+  const pending = useRef(false);
+  const lastRequest = useRef<GhoomiRequest | null>(null);
+  const send = async (text: string, retry = false) => {
+    if (!user || pending.current || (!retry && !text.trim() && !attachment)) return;
+    const request = retry
+      ? lastRequest.current
+      : {
+          user_id: user.id,
+          group_id: groupId,
+          message: text,
+          context: { page, ...(attachment ? { attachments: [attachment] } : {}) },
+        };
+    if (!request || request.user_id !== user.id || request.group_id !== groupId) return;
+    pending.current = true;
+    lastRequest.current = request;
     setError("");
     setStatus("submitted");
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        sender: user.name,
-        role: "user",
-        text: text || "Shared a photo",
-        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        ...(attachment ? { attachment } : {}),
-      },
-    ]);
-    setInput("");
-    onPromptSent?.();
-    const media = attachment;
-    setAttachment(undefined);
+    if (!retry) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          sender: user.name,
+          role: "user",
+          text: text || "Shared a photo",
+          time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          ...(attachment ? { attachment } : {}),
+        },
+      ]);
+      setInput("");
+      onPromptSent?.();
+      setAttachment(undefined);
+    }
     try {
-      const result = await sendMessageToGhoomi({
-        user_id: user.id,
-        group_id: groupId,
-        message: text,
-        context: { page, ...(media ? { attachments: [media] } : {}) },
-      });
+      const result = await sendMessageToGhoomi(request);
       setMessages((prev) => [
         ...prev,
         {
@@ -80,6 +87,8 @@ export function ChatSurface({
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Try again.");
       setStatus("error");
+    } finally {
+      pending.current = false;
     }
   };
   return (
@@ -93,7 +102,12 @@ export function ChatSurface({
           {error && (
             <div role="alert" className="text-destructive text-sm">
               {error}
-              <Button variant="ghost" size="sm" onClick={() => send(last)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                disabled={status === "submitted"}
+                onClick={() => send("", true)}
+              >
                 <RotateCcw />
                 Retry
               </Button>
@@ -134,6 +148,7 @@ export function ChatSurface({
                 size="icon"
                 title="Attach a photo"
                 aria-label="Attach a photo"
+                disabled={status === "submitted"}
                 onClick={() => fileInput.current?.click()}
               >
                 <Plus />
@@ -180,7 +195,7 @@ export function ChatSurface({
         />
         <p className="chat-disclaimer">
           {import.meta.env["VITE_GHOOMI_WEBHOOK_URL"]
-            ? "Connected to your Ghoomi workflow"
+            ? "Ghoomi workflow configured"
             : "Preview conversation · Ghoomi is not connected yet"}
         </p>
       </div>
