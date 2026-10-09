@@ -5,4 +5,4 @@
 - [ ] Implement secure group creation, invitations, membership and persistent/realtime chat — blocked: existing authentication/schema unavailable
 - [ ] Verify live Ghoomi V2.4 calls — blocked: production endpoint and authenticated integration unavailable
 - [ ] Implement persistent titled photo memories — blocked: existing storage/schema unavailable
-- [ ] Verify available frontend changes and report connection dependencies
+- [x] Verify available frontend changes and report connection dependencies
